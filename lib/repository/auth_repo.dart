@@ -1,9 +1,9 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:profile_app/project_level_0/services/user_services.dart';
 
 import '../models/user_model.dart';
 import '../services/auth_services.dart';
+import '../services/user_services.dart';
 
 class AuthenticationRepository {
 

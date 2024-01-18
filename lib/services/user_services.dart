@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:profile_app/project_level_0/models/user_model.dart';
+
+import '../models/user_model.dart';
 
 class UserServices {
 

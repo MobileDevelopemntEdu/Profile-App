@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:profile_app/project_level_0/models/user_model.dart';
-import 'package:profile_app/project_level_0/repository/user_repo.dart';
+import 'package:profile_app/repository/user_repo.dart';
+
+import '../models/user_model.dart';
+
 
 class HomeView extends StatelessWidget {
   final String uid;

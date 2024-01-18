@@ -1,12 +1,14 @@
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
-import 'package:profile_app/project_level_0/view/register_view.dart';
 
+import '../repository/auth_repo.dart';
 import 'home_view.dart';
+import 'login_view.dart';
 
-class LoginView extends StatelessWidget {
-  LoginView({super.key});
+class RegisterView extends StatelessWidget {
+  RegisterView({super.key});
 
+  final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
@@ -48,7 +50,16 @@ class LoginView extends StatelessWidget {
               const SizedBox(
                 height: 25,
               ),
-              const Center(child: Text("Login",style: TextStyle(fontSize:24.5 ),)),
+              const Center(child: Text("Register",style: TextStyle(fontSize:24.5 ),)),
+               Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                      hintText: "Name & Surname"
+                  ),
+                ),
+              ),
 
               Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -80,19 +91,28 @@ class LoginView extends StatelessWidget {
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(onPressed:() async {
-                    print("Burada");
-                    final FirebaseAuth _auth = FirebaseAuth.instance;
+                    
+                    // firesbae auth 
+                    
+                  final repo = AuthenticationRepository();
 
-                    var result = await _auth.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text).then((value) =>Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomeView(uid: value.user!.uid,))) );
-                    print(result);
-                  }, child: const Text("Login")),
+                  await repo.registerWithEmailAndPassword(nameController.text, emailController.text, passwordController.text)
+                      .then((value) {
+
+                    if(value != null){
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomeView(uid: value.uid,)));
+                    }else{
+                      print("error");
+                    }
+                  });
+                  }, child: const Text("Register")),
                 ),
               ),
 
 
               TextButton(onPressed: (){
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> RegisterView()));
-              }, child: const Text("Register Here"))
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> LoginView()));
+              }, child: const Text("Login Here"))
             ],
           ),
         ),
