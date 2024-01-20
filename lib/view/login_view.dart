@@ -1,17 +1,17 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../controller/auth_controller.dart';
 import 'home_view.dart';
 import 'register_view.dart';
 
 class LoginView extends StatelessWidget {
   LoginView({super.key});
 
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final authController = Provider.of<AuthController>(context, listen: true);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -53,7 +53,7 @@ class LoginView extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: TextField(
-                  controller: emailController,
+                  controller: authController.emailController,
                   decoration: const InputDecoration(
                       hintText: "Email"
                   ),
@@ -63,7 +63,7 @@ class LoginView extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: TextField(
-                  controller: passwordController,
+                  controller: authController.passwordController,
                   decoration: const InputDecoration(
                       hintText: "Password"
                   ),
@@ -81,10 +81,12 @@ class LoginView extends StatelessWidget {
                   width: double.infinity,
                   child: ElevatedButton(onPressed:() async {
                     print("Burada");
-                    final FirebaseAuth _auth = FirebaseAuth.instance;
+                    await authController.login().then((value) {
 
-                    var result = await _auth.signInWithEmailAndPassword(email: emailController.text, password: passwordController.text).then((value) =>Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomeView(uid: value.user!.uid,))) );
-                    print(result);
+                      if (value != null) {
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomeView(uid: value,)));
+                      }
+                    });
                   }, child: const Text("Login")),
                 ),
               ),

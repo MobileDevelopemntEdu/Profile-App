@@ -1,19 +1,17 @@
-
 import 'package:flutter/material.dart';
+import 'package:profile_app/controller/auth_controller.dart';
+import 'package:provider/provider.dart';
 
-import '../repository/auth_repo.dart';
 import 'home_view.dart';
 import 'login_view.dart';
 
 class RegisterView extends StatelessWidget {
   RegisterView({super.key});
 
-  final nameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
+    final authController = Provider.of<AuthController>(context, listen: true);
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -26,11 +24,17 @@ class RegisterView extends StatelessWidget {
               const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.account_circle_outlined,size: 40,),
+                  Icon(
+                    Icons.account_circle_outlined,
+                    size: 40,
+                  ),
                   SizedBox(
                     width: 12,
                   ),
-                  Text('Profile App',style: TextStyle(fontSize:24.5 ),)
+                  Text(
+                    'Profile App',
+                    style: TextStyle(fontSize: 24.5),
+                  )
                 ],
               ),
               const SizedBox(
@@ -46,41 +50,35 @@ class RegisterView extends StatelessWidget {
                   ),
                 ),
               ),
-
               const SizedBox(
                 height: 25,
               ),
-              const Center(child: Text("Register",style: TextStyle(fontSize:24.5 ),)),
-               Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TextField(
-                  controller: nameController,
-                  decoration: const InputDecoration(
-                      hintText: "Name & Surname"
-                  ),
-                ),
-              ),
-
+              const Center(
+                  child: Text(
+                "Register",
+                style: TextStyle(fontSize: 24.5),
+              )),
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: TextField(
-                  controller: emailController,
-                  decoration: const InputDecoration(
-                      hintText: "Email"
-                  ),
+                  controller: authController.nameController,
+                  decoration: const InputDecoration(hintText: "Name & Surname"),
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: TextField(
-                  controller: passwordController,
-                  decoration: const InputDecoration(
-                      hintText: "Password"
-                  ),
+                  controller: authController.emailController,
+                  decoration: const InputDecoration(hintText: "Email"),
                 ),
               ),
-
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: TextField(
+                  controller: authController.passwordController,
+                  decoration: const InputDecoration(hintText: "Password"),
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.only(
                   top: 50,
@@ -90,29 +88,36 @@ class RegisterView extends StatelessWidget {
                 ),
                 child: SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(onPressed:() async {
-                    
-                    // firesbae auth 
-                    
-                  final repo = AuthenticationRepository();
-
-                  await repo.registerWithEmailAndPassword(nameController.text, emailController.text, passwordController.text)
-                      .then((value) {
-
-                    if(value != null){
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomeView(uid: value.uid,)));
-                    }else{
-                      print("error");
-                    }
-                  });
-                  }, child: const Text("Register")),
+                  child: ElevatedButton(
+                      onPressed: () async {
+                          // `authController.register()` metodu, kullanıcının kayıt olma işlemini gerçekleştirir.
+                          // Bu işlem asenkron bir işlem olduğu için, `await` anahtar kelimesi kullanılarak işlemin tamamlanması beklenir.
+                        await authController.register().then((value) {
+                          // Kayıt işlemi tamamlandığında, geriye bir değer döner. Bu değer genellikle kullanıcının benzersiz kimliği (uid) olur.
+                          // Eğer dönen değer `null` değilse, bu kullanıcının başarıyla kayıt olduğu anlamına gelir.
+                          if (value != null) {
+                            // Kullanıcı başarıyla kayıt olduktan sonra, kullanıcıyı ana sayfaya yönlendiririz.
+                            // Bu işlem için Flutter'da `Navigator` sınıfının `pushReplacement` metodu kullanılır.
+                            // Bu metod, mevcut sayfayı yeni bir sayfa ile değiştirir ve geri dönüş yolunu kapatır.
+                            // Yeni sayfanın oluşturulması için `MaterialPageRoute` kullanılır ve kullanıcının uid'si yeni sayfaya parametre olarak geçilir.
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomeView(
+                                          uid: value,
+                                        )));
+                          }
+                        });
+                      },
+                      child: const Text("Register")),
                 ),
               ),
-
-
-              TextButton(onPressed: (){
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> LoginView()));
-              }, child: const Text("Login Here"))
+              TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => LoginView()));
+                  },
+                  child: const Text("Login Here"))
             ],
           ),
         ),
