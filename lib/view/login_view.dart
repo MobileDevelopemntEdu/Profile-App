@@ -8,7 +8,6 @@ import 'register_view.dart';
 class LoginView extends StatelessWidget {
   LoginView({super.key});
 
-
   @override
   Widget build(BuildContext context) {
     final authController = Provider.of<AuthController>(context, listen: true);
@@ -24,11 +23,17 @@ class LoginView extends StatelessWidget {
               const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.account_circle_outlined,size: 40,),
+                  Icon(
+                    Icons.account_circle_outlined,
+                    size: 40,
+                  ),
                   SizedBox(
                     width: 12,
                   ),
-                  Text('Profile App',style: TextStyle(fontSize:24.5 ),)
+                  Text(
+                    'Profile App',
+                    style: TextStyle(fontSize: 24.5),
+                  )
                 ],
               ),
               const SizedBox(
@@ -44,32 +49,28 @@ class LoginView extends StatelessWidget {
                   ),
                 ),
               ),
-
               const SizedBox(
                 height: 25,
               ),
-              const Center(child: Text("Login",style: TextStyle(fontSize:24.5 ),)),
-
+              const Center(
+                  child: Text(
+                "Login",
+                style: TextStyle(fontSize: 24.5),
+              )),
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: TextField(
                   controller: authController.emailController,
-                  decoration: const InputDecoration(
-                      hintText: "Email"
-                  ),
+                  decoration: const InputDecoration(hintText: "Email"),
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: TextField(
                   controller: authController.passwordController,
-                  decoration: const InputDecoration(
-                      hintText: "Password"
-                  ),
+                  decoration: const InputDecoration(hintText: "Password"),
                 ),
               ),
-
               Padding(
                 padding: const EdgeInsets.only(
                   top: 50,
@@ -79,22 +80,37 @@ class LoginView extends StatelessWidget {
                 ),
                 child: SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(onPressed:() async {
-                    print("Burada");
-                    await authController.login().then((value) {
+                  child: ElevatedButton(
+                      onPressed: () async {
+                        print("Burada");
 
-                      if (value != null) {
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomeView(uid: value,)));
-                      }
-                    });
-                  }, child: const Text("Login")),
+                        /// Bu kod bloğu, `authController`'ın `login` metodunu çağırır.
+                        /// `login` metodu bir Future döndürür ve bu Future'ın sonucunu bekler.
+                        /// Future tamamlandığında, `then` metodu ile sonucu işler.
+                        /// Eğer `login` metodu null olmayan bir değer döndürürse,
+                        /// `Navigator.pushReplacement` metodu ile `HomeView` sayfasına yönlendirir ve `uid` olarak dönen değeri kullanır.
+                        await authController.login().then((value) {
+                          if (value != null) {
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => HomeView(
+                                          uid: value,
+                                        )));
+                          }
+                        });
+                      },
+                      child: const Text("Login")),
                 ),
               ),
-
-
-              TextButton(onPressed: (){
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> RegisterView()));
-              }, child: const Text("Register Here"))
+              TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RegisterView()));
+                  },
+                  child: const Text("Register Here"))
             ],
           ),
         ),
